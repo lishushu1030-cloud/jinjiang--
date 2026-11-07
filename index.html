@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>苏州拍摄选点 · 整合 V5</title>
+<style>
+:root{
+  --navy:#0F3B72; --blue:#1B5FAE; --blue2:#4A87CE; --ice:#EAF1FA;
+  --copper:#B07C42; --red:#A8392A; --green:#2F7D4A;
+  --ink:#1A2431; --muted:#5A6574; --line:#D4DEEB; --bg:#F0F4FA; --card:#FFFFFF;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:"PingFang SC","Hiragino Sans GB",sans-serif;font-size:17.5px;line-height:1.78;-webkit-font-smoothing:antialiased}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.snav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,59,114,.97);backdrop-filter:blur(10px);box-shadow:0 4px 18px rgba(15,59,114,.22)}
+.snav-inner{max-width:1180px;margin:0 auto;padding:0 18px;display:flex;align-items:center;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.snav-inner::-webkit-scrollbar{display:none}
+.snav a{flex:0 0 auto;color:rgba(255,255,255,.78);font-size:13.5px;padding:14px 11px;border-bottom:3px solid transparent;white-space:nowrap;text-decoration:none;letter-spacing:.02em;transition:color .15s,background .15s,border-color .15s}
+.snav a:hover{color:#fff;text-decoration:none}
+.snav a.on{color:#fff;border-bottom-color:#7EB6F0;font-weight:600}
+.snav .brand{font-size:12px;letter-spacing:.18em;color:rgba(255,255,255,.5);padding-right:12px;margin-right:4px;border-right:1px solid rgba(255,255,255,.18)}
+@media(max-width:760px){
+  .snav-inner{padding:8px 12px;gap:8px}
+  .snav a{font-size:13px;padding:9px 14px;border:1px solid rgba(255,255,255,.2);border-radius:999px;border-bottom-width:1px;margin:0}
+  .snav a.on{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.55)}
+  .snav .brand{display:none}
+}
+
+.wrap{max-width:1180px;margin:0 auto;padding:78px 40px 96px}
+.kicker{font-size:16.5px;letter-spacing:.22em;color:var(--blue);margin-bottom:14px;display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;font-weight:600}
+.kicker .ver{letter-spacing:.12em;color:#9AA6B8;font-family:Georgia,serif;font-size:13.5px;font-weight:400}
+h1,h2,h3{font-family:"Songti SC","Noto Serif SC",Georgia,serif;font-weight:600;letter-spacing:.02em}
+h1{font-size:40px;line-height:1.3;color:var(--navy)}
+.sub{color:var(--muted);font-size:17px;margin-top:14px;max-width:920px;line-height:1.85}
+.rule{height:3px;background:linear-gradient(90deg,var(--navy),var(--blue2));width:80px;margin:26px 0 0;border-radius:2px}
+
+.names{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:30px 0 10px}
+.names a{display:block;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px 14px;text-decoration:none;box-shadow:0 2px 10px rgba(15,59,114,.05);transition:border-color .2s,box-shadow .2s,transform .15s}
+.names a:hover{border-color:var(--blue2);box-shadow:0 8px 22px rgba(27,95,174,.12);transform:translateY(-1px);text-decoration:none}
+.names .no{font-family:Georgia,serif;font-size:13px;color:var(--blue);letter-spacing:.08em}
+.names .nm{font-size:15.5px;color:var(--navy);font-weight:600;margin-top:6px;line-height:1.4}
+.names .meta{font-size:13px;color:var(--muted);margin-top:8px}
+
+h2{font-size:26px;color:var(--navy);margin:58px 0 10px;display:flex;align-items:center;gap:14px}
+h2 .n{font-family:Georgia,serif;background:var(--navy);color:#fff;font-size:14px;letter-spacing:.06em;padding:4px 11px;border-radius:3px;line-height:1.5;font-weight:400;box-shadow:0 2px 6px rgba(15,59,114,.2)}
+.h2n{font-size:16.5px;color:var(--muted);margin-bottom:20px;line-height:1.85}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:22px 22px 16px;box-shadow:0 2px 12px rgba(15,59,114,.04)}
+.chart{width:100%}
+.cap{margin-top:8px;padding:12px 4px 4px;border-top:1px solid var(--line);font-size:14.5px;color:#5C6878;line-height:1.8}
+.cap b{color:var(--navy)}
+
+.values{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px}
+.val{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px 18px 16px;box-shadow:0 2px 10px rgba(15,59,114,.04);position:relative;overflow:hidden}
+.val:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--navy)}
+.val.v2:before{background:var(--blue)}
+.val.v3:before{background:var(--blue2)}
+.val.v4:before{background:var(--copper)}
+.val .vt{font-size:12.5px;letter-spacing:.14em;color:var(--blue);font-weight:600;margin-bottom:6px}
+.val .vt em{font-style:normal;color:var(--copper);margin:0 4px}
+.val b{display:block;font-size:17px;color:var(--navy);margin-bottom:6px;font-weight:600}
+.val p{font-size:15px;color:#3A4555;line-height:1.8}
+
+.funnel{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:8px 0 18px}
+.fn{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:20px 16px;text-align:center;box-shadow:0 2px 10px rgba(15,59,114,.05)}
+.fn.final{border-color:#D4B48A;background:linear-gradient(180deg,#FFF9F0,#fff)}
+.fn .num{font-family:Georgia,"Songti SC",serif;font-size:42px;color:var(--navy);line-height:1;font-weight:600}
+.fn.final .num{color:var(--copper)}
+.fn .lab{font-size:14.5px;color:var(--muted);margin-top:8px;line-height:1.5}
+.fn .lab b{color:var(--navy);font-weight:600}
+.farr{display:flex;align-items:center;justify-content:center;color:#A9BAD0;font-size:22px}
+.fscreen{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px 20px;font-size:15.5px;color:#2B3542;line-height:1.9;box-shadow:0 2px 10px rgba(15,59,114,.04)}
+.fscreen b{color:var(--navy)}
+.fscreen .row{display:flex;gap:10px;margin-top:10px}
+.fscreen .row span{flex:1;background:var(--ice);border-radius:4px;padding:10px 12px;font-size:14.5px}
+
+.plan{background:var(--card);border:1px solid var(--line);border-radius:6px;margin:0 0 14px;overflow:hidden;box-shadow:0 3px 14px rgba(15,59,114,.05)}
+.plhead{display:flex;align-items:baseline;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#F7FAFE,#F3F7FC);flex-wrap:wrap}
+.plno{font-family:"Songti SC","Noto Serif SC",Georgia,serif;font-size:20px;color:var(--navy);font-weight:600;white-space:nowrap}
+.plhead h3{font-size:20px;color:var(--navy);font-weight:600}
+.pltag{font-size:12.5px;background:var(--ice);color:var(--navy);padding:3px 11px;border-radius:3px;font-weight:600;margin-left:auto;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:4px;border:1px solid #D5E3F5;transition:background .15s,color .15s}
+.pltag:hover{background:var(--navy);color:#fff;text-decoration:none}
+.hero>a{display:block;width:100%;height:100%;cursor:pointer}
+.hero>a:hover img{opacity:.92}
+.kv{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}
+.kv>div{padding:14px 16px;border-right:1px solid var(--line)}
+.kv>div:last-child{border-right:none}
+.kv .k{font-size:12.5px;color:var(--muted);letter-spacing:.06em;margin-bottom:4px}
+.kv .v{font-size:15px;font-weight:600;color:var(--ink);line-height:1.4}
+.kv .v small{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:4px}
+.dots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 16px;background:#F8FBFE}
+.chk{font-size:13.5px;color:#2B3542;background:#EEF3FA;padding:10px 12px;border-radius:4px;display:flex;justify-content:space-between;align-items:center;font-weight:500}
+.dot{width:10px;height:10px;border-radius:50%;flex:none;margin-left:8px}
+.dot.g{background:#2F7D4A;box-shadow:0 0 0 3px rgba(47,125,74,.15)}
+.dot.y{background:#B07C42;box-shadow:0 0 0 3px rgba(176,124,66,.15)}
+.dot.r{background:#A8392A;box-shadow:0 0 0 3px rgba(168,57,42,.12)}
+.plbody{display:grid;grid-template-columns:1fr 1fr}
+.plc{padding:16px 20px 14px}
+.plc+.plc{border-left:1px solid var(--line)}
+.plc h4{font-size:13px;color:var(--blue);letter-spacing:.12em;margin-bottom:10px;font-weight:600}
+.plc ul{list-style:none}
+.plc li{font-size:15.5px;color:#3A4555;line-height:1.85;padding-left:14px;position:relative;margin-bottom:8px}
+.plc li:before{content:"";position:absolute;left:0;top:11px;width:5px;height:5px;border-radius:50%;background:#A9BAD0}
+.plc li b{color:var(--navy);font-weight:600;margin-right:6px}
+.plwhy{margin:4px 18px 16px;padding:13px 16px;background:var(--ice);border-left:3px solid var(--blue);font-size:15.5px;color:#26313F;line-height:1.85;border-radius:0 4px 4px 0}
+.plwhy b{color:var(--blue);font-size:12.5px;letter-spacing:.12em;margin-right:10px;font-weight:600}
+
+.tbwrap{background:var(--card);border:1px solid var(--line);border-radius:6px;overflow-x:auto;box-shadow:0 2px 12px rgba(15,59,114,.04)}
+table{width:100%;border-collapse:collapse;min-width:1000px}
+th,td{padding:14px 14px;text-align:left;vertical-align:top;border-bottom:1px solid #E7EDF6}
+thead th{background:var(--navy);color:#fff;font-weight:600;font-size:15px;line-height:1.5;border-bottom:none}
+thead th:first-child{background:#0A2E5B}
+thead th small{display:block;font-weight:400;font-size:12.5px;opacity:.78;margin-top:4px}
+tbody th{font-weight:500;color:var(--blue);font-size:14.5px;letter-spacing:.04em;white-space:nowrap;background:#F6F9FD;border-right:1px solid #E7EDF6}
+td{font-size:15px;color:#2B3542;line-height:1.65}
+td.area{font-family:Georgia,"PingFang SC",serif;font-size:21px;color:var(--navy);font-weight:600}
+td.area span{font-size:13px;font-weight:400;color:#6E86A6;margin-left:2px}
+tr:last-child td,tr:last-child th{border-bottom:none}
+tbody tr:hover td{background:#F4F8FD}
+thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
+.legend{margin-top:16px;font-size:13.5px;color:#8B95A5}
+
+.hotel{margin-top:48px;padding-top:8px;scroll-margin-top:72px}
+.hotel:first-of-type{margin-top:28px}
+.hero{width:100%;border-radius:6px;overflow:hidden;border:1px solid var(--line);box-shadow:0 3px 14px rgba(15,59,114,.08);margin-bottom:14px;background:#0A2E5B;aspect-ratio:21/9;max-height:300px}
+.hero img{width:100%;height:100%;object-fit:cover;display:block}
+.hero.fit{aspect-ratio:auto;max-height:none;background:#0A2E5B}
+.hero.fit img{height:auto;object-fit:contain;max-height:320px}
+.hero.full{aspect-ratio:auto;max-height:none;height:auto}
+.hero.full img{width:100%;height:auto;object-fit:unset;display:block}
+.ctrip-btn{display:inline-flex;align-items:center;gap:6px;background:var(--navy);color:#fff !important;font-size:14px;padding:10px 16px;border-radius:4px;text-decoration:none !important;font-weight:600;white-space:nowrap;box-shadow:0 2px 8px rgba(15,59,114,.2);margin:2px 0 18px}
+.ctrip-btn:hover{background:var(--blue);text-decoration:none !important}
+
+.sec{margin:18px 0 10px;font-size:13px;color:var(--blue);letter-spacing:.14em;font-weight:600}
+.sec span{font-family:Georgia,serif;margin-right:8px;color:var(--navy)}
+
+.pg{display:grid;gap:10px;margin-top:8px}
+.pg.g2{grid-template-columns:1fr 1fr}
+.pg.g3{grid-template-columns:1fr 1fr 1fr}
+.pg.g4{grid-template-columns:repeat(4,1fr)}
+.ph{background:var(--card);border-radius:4px;overflow:hidden;border:1px solid var(--line);box-shadow:0 1px 6px rgba(15,59,114,.05);display:flex;flex-direction:column}
+.ph .pic{display:block;aspect-ratio:4/3;overflow:hidden;background:#E8EEF6;position:relative;width:100%}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .tag{position:absolute;left:7px;top:7px;background:rgba(15,59,114,.88);color:#fff;font-size:11px;padding:2px 8px;border-radius:2px;letter-spacing:.06em}
+.ph figcaption{padding:8px 10px 10px;font-size:12.5px;color:#5C6878;line-height:1.45;flex:1}
+.note{font-size:14px;color:#8B95A5;margin-top:8px;line-height:1.7}
+.foot{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:#9AA6B8;line-height:1.85}
+
+.dotleg{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;font-size:13.5px;color:#5C6878;margin:0 0 12px}
+.dotleg i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:7px;vertical-align:middle}
+.dotleg i.g{background:#2F7D4A;box-shadow:0 0 0 3px rgba(47,125,74,.15)}
+.dotleg i.y{background:#B07C42;box-shadow:0 0 0 3px rgba(176,124,66,.15)}
+.dotleg i.r{background:#A8392A;box-shadow:0 0 0 3px rgba(168,57,42,.12)}
+
+@media(max-width:760px){
+  body{font-size:16px}
+  .wrap{padding:70px 16px 64px}
+  h1{font-size:28px}
+  h2{font-size:22px}
+  .names{grid-template-columns:1fr}
+  .values{grid-template-columns:1fr}
+  .funnel{grid-template-columns:1fr;gap:8px}
+  .farr{transform:rotate(90deg);padding:2px 0}
+  .plbody{grid-template-columns:1fr}
+  .plc+.plc{border-left:none;border-top:1px solid var(--line)}
+  .kv{grid-template-columns:1fr 1fr}
+  .kv>div:nth-child(2n){border-right:none}
+  .dots{grid-template-columns:1fr 1fr}
+  .pg.g4,.pg.g3{grid-template-columns:1fr 1fr}
+  .hero{aspect-ratio:16/9;max-height:200px}
+  .hero.full{aspect-ratio:auto;max-height:none}
+  .fscreen .row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav class="snav" id="snav" aria-label="页面导航">
+  <div class="snav-inner">
+    <span class="brand">苏州选点</span>
+    <a href="#why" data-h="why">选点逻辑</a>
+    <a href="#h1" data-h="h1">希尔顿欢朋·吴中</a>
+    <a href="#h2" data-h="h2">维也纳·火车站</a>
+    <a href="#h3" data-h="h3">维也纳·观前</a>
+    <a href="#h4" data-h="h4">凯里亚德·吴江</a>
+    <a href="#xcompare" data-h="xcompare">横向对比</a>
+  </div>
+</nav>
+
+<div class="wrap">
+<div class="kicker">《人间老有处趣》 · 苏州站<span class="ver">整合 V5 · 2026-11-07</span></div>
+<h1>苏州拍摄选点 · 四家整合</h1>
+<p class="sub">最终要选定一家酒店作为拍摄基地，其余三家作备选。四家均属锦江酒店（中国区）可协调门店；筛选时以<strong>拍摄环境与大床房面积</strong>为第一考量。</p>
+<div class="rule"></div>
+
+<div class="names">
+  <a href="#h1"><div class="no">01</div><div class="nm">苏州吴中希尔顿欢朋酒店</div><div class="meta">希尔顿欢朋·吴中 · 大床 35–45㎡ · 5.2 km</div></a>
+  <a href="#h2"><div class="no">02</div><div class="nm">维也纳国际酒店（苏州火车站店）</div><div class="meta">维也纳·火车站 · 大床 37–45㎡ · 约 3 km</div></a>
+  <a href="#h3"><div class="no">03</div><div class="nm">维也纳国际酒店（苏州观前街平江路店）</div><div class="meta">维也纳·观前 · 大床 20–40㎡ · 0.97 km</div></a>
+  <a href="#h4"><div class="no">04</div><div class="nm">凯里亚德酒店（苏州吴江人民广场店）</div><div class="meta">凯里亚德·吴江 · 大床 35–38㎡ · 约 23 km</div></a>
+</div>
+
+<section id="why" style="scroll-margin-top:72px">
+<h2><span class="n">01</span>为什么选这四家</h2>
+<p class="h2n">只选锦江酒店（中国区）可管店。先按<strong>距平江路 30 km 以内</strong>收窄候选，再以拍摄环境／大床房面积定下四家：希尔顿欢朋·吴中与维也纳·火车站面积相对更大，观前维也纳因距离保留，凯里亚德·吴江一并入选。</p>
+
+<div class="funnel" aria-label="筛选漏斗">
+  <div class="fn"><div class="num">17</div><div class="lab"><b>中国区中高端在营</b><br>维也纳 6 · 欢朋 6<br>都城 2 · 凯里亚德 2 · 枫渡 1</div></div>
+  <div class="farr" aria-hidden="true">→</div>
+  <div class="fn"><div class="num">6</div><div class="lab"><b>距平江路 30 km 以内</b><br>（主城可达 · 有公区可拍）</div></div>
+  <div class="farr" aria-hidden="true">→</div>
+  <div class="fn final"><div class="num">4</div><div class="lab"><b>留下</b><br>按拍摄环境／大床面积<br>定拍摄基地备选</div></div>
+</div>
+
+<div class="fscreen">
+  <b>两道筛</b>
+  <div class="row">
+    <span><b>17 → 6</b><br>中国区中高端在营中，筛掉距平江路超过 30 km 的门店（如枫渡·花桥约 45 km），留下主城可达、有公区可拍的六家。</span>
+    <span><b>6 → 4</b><br>主看大床房面积与前厅／客房可拍证据：保留希尔顿欢朋·吴中、维也纳·火车站、维也纳·观前、凯里亚德·吴江。</span>
+  </div>
+</div>
+
+<h2 style="margin-top:40px"><span class="n">01b</span>选点逻辑 · 四层价值</h2>
+<p class="h2n">锦江不只是这趟路上的「住处」——从想去、敢去，到愿意常去，选店要接住下面四层。</p>
+<div class="values">
+  <div class="val"><div class="vt">品牌价值 <em>·</em> 心安</div><b>看见世界的底气</b><p>门店归中国区可协调；画面里露出锦江／子品牌身份，住进来心里踏实，探索才站得住。</p></div>
+  <div class="val v2"><div class="vt">情绪价值 <em>·</em> 有人同行</div><b>回来有人应</b><p>前台登记、店员起身、同伴同住——镜头要留下「被接住」的瞬间，而不只是空房间。</p></div>
+  <div class="val v3"><div class="vt">体验价值 <em>·</em> 玩得从容</div><b>转场少、节奏稳</b><p>集合、取餐、出发、回来收尾尽量在一家酒店内完成；到平江路的距离决定当天累不累。</p></div>
+  <div class="val v4"><div class="vt">产品价值 <em>·</em> 住得安心</div><b>房间够拍、早餐可跟</b><p>大床房面积撑得住三机位；前台、大堂、餐厅有图证，不靠现场碰运气。</p></div>
+</div>
+</section>
+
+<section id="hotels" style="scroll-margin-top:72px">
+<h2><span class="n">02</span>分别四家酒店</h2>
+<p class="h2n">四家各是一套完整方案。绿点＝图证充分；铜点＝能拍但有保留；红点＝本轮证据不足或区位吃亏。每家：头图 → 方案 → 携程 → 官方图／客拍。</p>
+
+<!-- ========== H1 ========== -->
+<section class="hotel" id="h1">
+<figure class="hero"><a href="https://hotels.ctrip.com/hotels/20058604.html" target="_blank" rel="noopener" title="携程 · 房价与房型"><img src="assets/hampton-wuzhong/exterior/official-酒店外部-04.jpg" alt="苏州吴中希尔顿欢朋酒店外观" loading="lazy" style="object-position:center 8%"></a></figure>
+<div class="plan">
+<div class="plhead"><span class="plno">方案一</span><h3>苏州吴中希尔顿欢朋酒店</h3><a class="pltag" href="https://hotels.ctrip.com/hotels/20058604.html" target="_blank" rel="noopener">携程 · 房价房型 →</a></div>
+<div class="kv">
+<div><div class="k">开业 / 房量</div><div class="v">2018 年 <small>230 间</small></div></div>
+<div><div class="k">大床房</div><div class="v">35–45㎡ <small>舒适 35 · 豪华 45</small></div></div>
+<div><div class="k">距平江路</div><div class="v">5.2 km <small>驾车约 16 分钟</small></div></div>
+<div><div class="k">携程口碑</div><div class="v">4.9 <small>18231 条</small></div></div>
+</div>
+<div class="dots">
+<div class="chk">客房面积<span class="dot g"></span></div>
+<div class="chk">前台与休息区<span class="dot g"></span></div>
+<div class="chk">公共空间<span class="dot g"></span></div>
+<div class="chk">早餐台<span class="dot g"></span></div>
+<div class="chk">配套设施<span class="dot g"></span></div>
+<div class="chk">品牌露出<span class="dot y"></span></div>
+<div class="chk">携程口碑<span class="dot g"></span></div>
+<div class="chk">距离优势<span class="dot y"></span></div>
+</div>
+<div class="plbody"><div class="plc"><h4>品牌宣传优势</h4><ul>
+<li><b>露出</b>店内与门头为 Hampton by Hilton；运营归中国区，须让客户知情。</li>
+<li><b>前台与休息区</b>客拍可见大理石前台与大堂吧休息区，动线清楚。</li>
+<li><b>大床房</b>舒适／欢享 35㎡，高级 40㎡，豪华 45㎡。</li>
+</ul></div><div class="plc"><h4>为什么选这家</h4><ul>
+<li><b>居住</b>豪华大床房图证床尾通道与窗边坐区。</li>
+<li><b>取餐</b>自助台长，官方＋客拍均有。</li>
+<li><b>距离</b>距平江路历史街区 5.2 km，驾车约 16 分钟。</li>
+</ul></div></div>
+<div class="plwhy"><b>一句话</b>房间上限到 45㎡，公区与早餐图证充分，适合以「住得开」为主的片子。</div>
+</div>
+<a class="ctrip-btn" href="https://hotels.ctrip.com/hotels/20058604.html" target="_blank" rel="noopener">携程 · 房价与房型 →</a>
+<div class="sec"><span>①</span>官方图 · 前台 → 前厅 → 客房 → 餐厅</div>
+<div class="pg g3">
+<figure class="ph"><a class="pic" href="assets/hampton-wuzhong/lobby/official-前厅-替换.jpg" target="_blank"><img src="assets/hampton-wuzhong/lobby/official-前厅-替换.jpg" alt="前厅" loading="lazy"><span class="tag">前厅</span></a><figcaption>官方相册</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/hampton-wuzhong/room-king/official-豪华大床房-01.jpg" target="_blank"><img src="assets/hampton-wuzhong/room-king/official-豪华大床房-01.jpg" alt="客房 · 豪华大床房" loading="lazy"><span class="tag">客房 · 豪华大床房</span></a><figcaption>官方相册</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/hampton-wuzhong/breakfast/official-餐厅-替换.jpg" target="_blank"><img src="assets/hampton-wuzhong/breakfast/official-餐厅-替换.jpg" alt="餐厅" loading="lazy"><span class="tag">餐厅</span></a><figcaption>官方相册</figcaption></figure>
+</div>
+<div class="sec"><span>②</span>客拍精选</div>
+<div class="pg g4">
+<figure class="ph"><a class="pic" href="assets/hampton-wuzhong/reviews/lobby/ctrip-014.jpg" target="_blank"><img src="assets/hampton-wuzhong/reviews/lobby/ctrip-014.jpg" alt="前厅 · 前台" loading="lazy"><span class="tag">前厅 · 前台</span></a><figcaption>前厅 · 前台 · 住客实拍 · 2026-11</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/hampton-wuzhong/reviews/lobby/ctrip-030.jpg" target="_blank"><img src="assets/hampton-wuzhong/reviews/lobby/ctrip-030.jpg" alt="前厅 · 休息区" loading="lazy"><span class="tag">前厅 · 休息区</span></a><figcaption>前厅 · 休息区 · 住客实拍 · 2026-10</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/hampton-wuzhong/reviews/room/ctrip-020.jpg" target="_blank"><img src="assets/hampton-wuzhong/reviews/room/ctrip-020.jpg" alt="客房 · 大床" loading="lazy"><span class="tag">客房 · 大床</span></a><figcaption>客房 · 大床 · 住客实拍 · 2026-11</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/hampton-wuzhong/reviews/breakfast/ctrip-003.jpg" target="_blank"><img src="assets/hampton-wuzhong/reviews/breakfast/ctrip-003.jpg" alt="就餐环境" loading="lazy"><span class="tag">就餐环境</span></a><figcaption>就餐环境 · 住客实拍 · 2026-10</figcaption></figure>
+</div>
+</section>
+
+<!-- ========== H2 ========== -->
+<section class="hotel" id="h2">
+<figure class="hero"><a href="https://hotels.ctrip.com/hotels/21125103.html" target="_blank" rel="noopener" title="携程 · 房价与房型"><img src="assets/vienna-station/exterior/hero-门头全称.jpg" alt="维也纳国际酒店苏州火车站店外观" loading="lazy"></a></figure>
+<div class="plan">
+<div class="plhead"><span class="plno">方案二</span><h3>维也纳国际酒店（苏州火车站店）</h3><a class="pltag" href="https://hotels.ctrip.com/hotels/21125103.html" target="_blank" rel="noopener">携程 · 房价房型 →</a></div>
+<div class="kv">
+<div><div class="k">开业 / 房量</div><div class="v">2018 年 <small>358 间</small></div></div>
+<div><div class="k">大床房</div><div class="v">37–45㎡ <small>景观档到 45</small></div></div>
+<div><div class="k">距平江路</div><div class="v">约 3 km <small>驾车约 10 分钟</small></div></div>
+<div><div class="k">携程口碑</div><div class="v">4.6 <small>4308 条</small></div></div>
+</div>
+<div class="dots">
+<div class="chk">客房面积<span class="dot g"></span></div>
+<div class="chk">前台与休息区<span class="dot g"></span></div>
+<div class="chk">公共空间<span class="dot g"></span></div>
+<div class="chk">早餐台<span class="dot y"></span></div>
+<div class="chk">配套设施<span class="dot y"></span></div>
+<div class="chk">品牌露出<span class="dot g"></span></div>
+<div class="chk">携程口碑<span class="dot y"></span></div>
+<div class="chk">距离优势<span class="dot g"></span></div>
+</div>
+<div class="plbody"><div class="plc"><h4>品牌宣传优势</h4><ul>
+<li><b>位置</b>正对苏州站北广场，地下通道连通车站。</li>
+<li><b>前台与休息区</b>官方大堂可见长柜台与壁画；客拍可见弧形柜台与挑高坐区。</li>
+<li><b>大床房</b>标准／高级 37㎡，豪华景观 45㎡。</li>
+</ul></div><div class="plc"><h4>为什么选这家</h4><ul>
+<li><b>居住</b>官方豪华景观大床图齐；客拍大床少，下单须认准大床档。</li>
+<li><b>取餐</b>官方餐厅图齐；客拍早餐不足。</li>
+<li><b>距离</b>距平江路约 3 km（拙政园携程 2.7 km），驾车约 10 分钟。</li>
+</ul></div></div>
+<div class="plwhy"><b>一句话</b>大床上限 45㎡，接站与团队进出方便，适合「到了就能拍」的行程。</div>
+</div>
+<a class="ctrip-btn" href="https://hotels.ctrip.com/hotels/21125103.html" target="_blank" rel="noopener">携程 · 房价与房型 →</a>
+<div class="sec"><span>①</span>官方图 · 前台 → 前厅 → 客房 → 餐厅</div>
+<div class="pg g3">
+<figure class="ph"><a class="pic" href="assets/vienna-station/lobby/official-前厅-替换.jpg" target="_blank"><img src="assets/vienna-station/lobby/official-前厅-替换.jpg" alt="前厅" loading="lazy"><span class="tag">前厅</span></a><figcaption>官方相册</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/vienna-station/room-king/official-豪华景观大床房-01.jpg" target="_blank"><img src="assets/vienna-station/room-king/official-豪华景观大床房-01.jpg" alt="客房 · 豪华景观大床房" loading="lazy"><span class="tag">客房 · 豪华景观大床房</span></a><figcaption>官方相册</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/vienna-station/breakfast/official-餐厅-01.jpg" target="_blank"><img src="assets/vienna-station/breakfast/official-餐厅-01.jpg" alt="餐厅" loading="lazy"><span class="tag">餐厅</span></a><figcaption>官方相册</figcaption></figure>
+</div>
+</section>
+
+<!-- ========== H3 ========== -->
+<section class="hotel" id="h3">
+<figure class="hero full"><a href="https://hotels.ctrip.com/hotels/99962181.html" target="_blank" rel="noopener" title="携程 · 房价与房型"><img src="assets/vienna-guanqian/exterior/hero-入口门头-验收.jpg" alt="维也纳国际酒店苏州观前街平江路店外观" loading="lazy"></a></figure>
+<div class="plan">
+<div class="plhead"><span class="plno">方案三</span><h3>维也纳国际酒店（苏州观前街平江路店）</h3><a class="pltag" href="https://hotels.ctrip.com/hotels/99962181.html" target="_blank" rel="noopener">携程 · 房价房型 →</a></div>
+<div class="kv">
+<div><div class="k">开业 / 房量</div><div class="v">2022 年 <small>107 间</small></div></div>
+<div><div class="k">大床房</div><div class="v">20–40㎡ <small>须订豪华景观档</small></div></div>
+<div><div class="k">距平江路</div><div class="v">0.97 km <small>步行约 12 分钟</small></div></div>
+<div><div class="k">携程口碑</div><div class="v">4.7 <small>2606 条</small></div></div>
+</div>
+<div class="dots">
+<div class="chk">客房面积<span class="dot y"></span></div>
+<div class="chk">前台与休息区<span class="dot g"></span></div>
+<div class="chk">公共空间<span class="dot g"></span></div>
+<div class="chk">早餐台<span class="dot y"></span></div>
+<div class="chk">配套设施<span class="dot y"></span></div>
+<div class="chk">品牌露出<span class="dot g"></span></div>
+<div class="chk">携程口碑<span class="dot g"></span></div>
+<div class="chk">距离优势<span class="dot g"></span></div>
+</div>
+<div class="plbody"><div class="plc"><h4>品牌宣传优势</h4><ul>
+<li><b>门头</b>正立面「维也纳国际酒店 / VIENNA」金色大字。</li>
+<li><b>位置</b>距平江路历史街区 970 米，步行约 12 分钟。</li>
+<li><b>前台与休息区</b>官方前台 2 张；长木桌休息区可拍聊天。</li>
+</ul></div><div class="plc"><h4>为什么选这家</h4><ul>
+<li><b>居住</b>普通档 20–25㎡，豪华景观到 30–40㎡——须订最高档。</li>
+<li><b>转场</b>步行可达平江路，转场少。</li>
+<li><b>早餐</b>官方 2 张＋客拍自助台。</li>
+</ul></div></div>
+<div class="plwhy"><b>一句话</b>住在街区旁边，转场成本最低；房间要靠订档位兜面积。</div>
+</div>
+<a class="ctrip-btn" href="https://hotels.ctrip.com/hotels/99962181.html" target="_blank" rel="noopener">携程 · 房价与房型 →</a>
+<div class="sec"><span>①</span>官方图 · 前台 → 前厅 → 客房 → 餐厅</div>
+<div class="pg g4">
+<figure class="ph"><a class="pic" href="assets/vienna-guanqian/lobby/official-前台-01.jpg" target="_blank"><img src="assets/vienna-guanqian/lobby/official-前台-01.jpg" alt="前台" loading="lazy"><span class="tag">前台</span></a><figcaption>官方相册</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/vienna-guanqian/lobby/official-大堂吧-03.jpg" target="_blank"><img src="assets/vienna-guanqian/lobby/official-大堂吧-03.jpg" alt="前厅" loading="lazy"><span class="tag">前厅</span></a><figcaption>官方相册</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/vienna-guanqian/room-king/official-豪华景观大床房-01.jpg" target="_blank"><img src="assets/vienna-guanqian/room-king/official-豪华景观大床房-01.jpg" alt="客房 · 豪华景观大床房" loading="lazy"><span class="tag">客房 · 豪华景观大床房</span></a><figcaption>官方相册</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/vienna-guanqian/breakfast/official-餐厅-01.jpg" target="_blank"><img src="assets/vienna-guanqian/breakfast/official-餐厅-01.jpg" alt="餐厅" loading="lazy"><span class="tag">餐厅</span></a><figcaption>官方相册</figcaption></figure>
+</div>
+<div class="sec"><span>②</span>客拍精选</div>
+<div class="pg g4">
+<figure class="ph"><a class="pic" href="assets/vienna-guanqian/reviews/lobby/trip-051.jpg" target="_blank"><img src="assets/vienna-guanqian/reviews/lobby/trip-051.jpg" alt="前厅 · 休息区" loading="lazy"><span class="tag">前厅 · 休息区</span></a><figcaption>前厅 · 休息区 · 住客实拍 · 2026-10</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/vienna-guanqian/reviews/lobby/user-rest-table.jpg" target="_blank"><img src="assets/vienna-guanqian/reviews/lobby/user-rest-table.jpg" alt="前厅 · 休息区" loading="lazy"><span class="tag">前厅 · 休息区</span></a><figcaption>前厅 · 休息区 · 住客实拍 · 长木桌</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/vienna-guanqian/reviews/room/trip-067.jpg" target="_blank"><img src="assets/vienna-guanqian/reviews/room/trip-067.jpg" alt="客房 · 大床" loading="lazy"><span class="tag">客房 · 大床</span></a><figcaption>客房 · 大床 · 住客实拍 · 2026-10</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/vienna-guanqian/reviews/breakfast/trip-066.jpg" target="_blank"><img src="assets/vienna-guanqian/reviews/breakfast/trip-066.jpg" alt="就餐环境" loading="lazy"><span class="tag">就餐环境</span></a><figcaption>就餐环境 · 住客实拍 · 2026-10</figcaption></figure>
+</div>
+</section>
+
+<!-- ========== H4 ========== -->
+<section class="hotel" id="h4">
+<figure class="hero"><a href="https://hotels.ctrip.com/hotels/1503528.html" target="_blank" rel="noopener" title="携程 · 房价与房型"><img src="assets/kyriad-wujiang/exterior/official-酒店外部-01.jpg" alt="凯里亚德酒店苏州吴江人民广场店外观" loading="lazy" style="object-position:center 40%"></a></figure>
+<div class="plan">
+<div class="plhead"><span class="plno">方案四</span><h3>凯里亚德酒店（苏州吴江人民广场店）</h3><a class="pltag" href="https://hotels.ctrip.com/hotels/1503528.html" target="_blank" rel="noopener">携程 · 房价房型 →</a></div>
+<div class="kv">
+<div><div class="k">开业 / 房量</div><div class="v">2020 年 <small>108 间</small></div></div>
+<div><div class="k">大床房</div><div class="v">35–38㎡ <small>档位接近</small></div></div>
+<div><div class="k">距平江路</div><div class="v">约 23 km <small>驾车约 32 分钟</small></div></div>
+<div><div class="k">携程口碑</div><div class="v">4.8 <small>1160 条</small></div></div>
+</div>
+<div class="dots">
+<div class="chk">客房面积<span class="dot g"></span></div>
+<div class="chk">前台与休息区<span class="dot g"></span></div>
+<div class="chk">公共空间<span class="dot g"></span></div>
+<div class="chk">早餐台<span class="dot y"></span></div>
+<div class="chk">配套设施<span class="dot y"></span></div>
+<div class="chk">品牌露出<span class="dot g"></span></div>
+<div class="chk">携程口碑<span class="dot g"></span></div>
+<div class="chk">距离优势<span class="dot r"></span></div>
+</div>
+<div class="plbody"><div class="plc"><h4>品牌宣传优势</h4><ul>
+<li><b>品牌</b>凯里亚德由中国区运营；书吧是固定场景。</li>
+<li><b>前台与休息区</b>木饰面＋云形吊灯＋书墙书吧，官方与客拍均可入画。</li>
+<li><b>大床房</b>标准／豪华 35㎡，高级 38㎡。</li>
+</ul></div><div class="plc"><h4>为什么选这家</h4><ul>
+<li><b>居住</b>客拍大床可见；官方高级大床房图齐。</li>
+<li><b>取餐</b>官方餐厅 3 张；客拍早餐不足。</li>
+<li><b>距离</b>吴江至平江公开自驾约 23 km／32 分钟。</li>
+</ul></div></div>
+<div class="plwhy"><b>一句话</b>房间档位统一、公区有辨识度；代价是到古城的车程。</div>
+</div>
+<a class="ctrip-btn" href="https://hotels.ctrip.com/hotels/1503528.html" target="_blank" rel="noopener">携程 · 房价与房型 →</a>
+<div class="sec"><span>①</span>官方图 · 前台 → 前厅 → 客房 → 餐厅</div>
+<div class="pg g3">
+<figure class="ph"><a class="pic" href="assets/kyriad-wujiang/lobby/official-公共区域-01.jpg" target="_blank"><img src="assets/kyriad-wujiang/lobby/official-公共区域-01.jpg" alt="前台" loading="lazy"><span class="tag">前台</span></a><figcaption>官方相册 · 柜台＋世界地图墙</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/kyriad-wujiang/room-king/official-高级大床房-01.jpg" target="_blank"><img src="assets/kyriad-wujiang/room-king/official-高级大床房-01.jpg" alt="客房 · 高级大床房" loading="lazy"><span class="tag">客房 · 高级大床房</span></a><figcaption>官方相册</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/kyriad-wujiang/breakfast/official-餐厅-01.jpg" target="_blank"><img src="assets/kyriad-wujiang/breakfast/official-餐厅-01.jpg" alt="餐厅" loading="lazy"><span class="tag">餐厅</span></a><figcaption>官方相册</figcaption></figure>
+</div>
+<div class="sec"><span>②</span>客拍精选</div>
+<div class="pg g3">
+<figure class="ph"><a class="pic" href="assets/kyriad-wujiang/reviews/lobby/ctrip-018.jpg" target="_blank"><img src="assets/kyriad-wujiang/reviews/lobby/ctrip-018.jpg" alt="前厅 · 书吧" loading="lazy"><span class="tag">前厅 · 书吧</span></a><figcaption>前厅 · 书吧 · 住客实拍 · 2026-05</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/kyriad-wujiang/reviews/room/ctrip-001.jpg" target="_blank"><img src="assets/kyriad-wujiang/reviews/room/ctrip-001.jpg" alt="客房 · 大床" loading="lazy"><span class="tag">客房 · 大床</span></a><figcaption>客房 · 大床 · 住客实拍 · 2026-07</figcaption></figure>
+<figure class="ph"><a class="pic" href="assets/kyriad-wujiang/reviews/room/ctrip-006.jpg" target="_blank"><img src="assets/kyriad-wujiang/reviews/room/ctrip-006.jpg" alt="客房纵深" loading="lazy"><span class="tag">客房纵深</span></a><figcaption>客房纵深 · 住客实拍 · 2026-09</figcaption></figure>
+</div>
+</section>
+</section>
+
+<section id="xcompare" style="scroll-margin-top:72px">
+<h2><span class="n">03</span>横向对比</h2>
+<p class="h2n">先看八点要素强弱，再看大床房面积区间与距平江路距离，最后对照表逐条读。</p>
+
+<div class="panel" style="margin-bottom:22px">
+  <div class="dotleg">
+    <span><i class="g"></i>绿 · 图证充分／区位占优</span>
+    <span><i class="y"></i>铜 · 能拍但有保留</span>
+    <span><i class="r"></i>红 · 证据不足或区位吃亏</span>
+  </div>
+  <div id="punch" class="chart"></div>
+  <div class="cap">横轴＝方案卡八点要素；纵轴＝四家酒店。绿／铜／红表示强弱。</div>
+</div>
+
+<div class="panel" style="margin-bottom:22px">
+  <div id="rangebar" class="chart"></div>
+  <div class="cap"><b>大床房面积区间 × 距离。</b>纵轴由近到远；左侧店名、右侧距平江路；横条＝大床房最小–最大（㎡）。不含双床与套房。</div>
+</div>
+
+<h2 style="margin-top:36px"><span class="n">03b</span>要素逐条对照</h2>
+<p class="h2n">同一行横向读。面积只列大床房；距离一律到平江路。</p>
+<div class="tbwrap"><table>
+<thead><tr>
+  <th style="width:100px">要素</th>
+  <th>① 苏州吴中希尔顿欢朋酒店<small>吴中 · 2018 · 5.2 km</small></th>
+  <th>② 维也纳国际 · 火车站<small>姑苏 · 2018 · 约 3 km</small></th>
+  <th>③ 维也纳国际 · 观前<small>姑苏 · 2022 · 0.97 km</small></th>
+  <th>④ 凯里亚德 · 吴江人民广场<small>吴江 · 2020 · 约 23 km</small></th>
+</tr></thead>
+<tbody>
+<tr><th>大床房面积</th>
+  <td class="area">35–45<span>㎡</span></td><td class="area">37–45<span>㎡</span></td>
+  <td class="area">20–40<span>㎡</span></td><td class="area">35–38<span>㎡</span></td></tr>
+<tr><th>前台与休息区</th>
+  <td>客拍可见大理石台＋大堂吧休息区</td><td>官方长柜台＋壁画；客拍弧形柜台＋挑高坐区</td>
+  <td>官方前台 2 张；长木桌休息区</td><td>官方柜台＋书墙；客拍书吧休息区</td></tr>
+<tr><th>大堂</th>
+  <td>大堂吧＋休息区，层高明亮</td><td>吊灯挑高，办理区进深够</td>
+  <td>沙发组＋大堂吧／长木桌</td><td>书吧＋云形吊灯＋木饰面</td></tr>
+<tr><th>早餐</th>
+  <td>自助，餐台长（官方＋客拍）</td><td>自助（官方图齐）</td>
+  <td>自助（官方 2 张＋客拍）</td><td>自助（官方 3 张）</td></tr>
+<tr><th>非客房场景</th>
+  <td>大堂吧／健身房</td><td>会议室／洗衣房</td>
+  <td>长木桌／走廊</td><td>书吧／大堂吧／健身房</td></tr>
+<tr><th>门头品牌</th>
+  <td>Hampton by Hilton</td><td>维也纳国际 VIENNA</td>
+  <td>维也纳国际酒店 VIENNA</td><td>凯里亚德 Kyriad</td></tr>
+<tr><th>携程口碑</th>
+  <td>4.9 ／ 18231</td><td>4.6 ／ 4308</td>
+  <td>4.7 ／ 2606</td><td>4.8 ／ 1160</td></tr>
+</tbody></table></div>
+<p class="legend">面积取 Trip.com 房型 areaInfo，仅统计大床房。距离：①③ 为携程标注到「平江路历史街区」；② 约 3 km；④ 吴江→平江公开自驾约 23 km／32 分钟。</p>
+</section>
+
+<p class="foot">整合 V5 · 2026-11-07 · 不覆盖 V1／V2／V3／V4 · 中国区口径 · 面积 Trip.com areaInfo · 图片 携程官方／住客评价</p>
+</div>
+
+<script src="assets/js/echarts.min.js"></script>
+<script>
+(function(){
+  var NAVY='#0F3B72', BLUE='#1B5FAE', COPPER='#B07C42', RED='#A8392A', GREEN='#2F7D4A', INK='#2B3542', MUTED='#8B95A5', LINE='#E7EDF6';
+  var FONT='"PingFang SC","Hiragino Sans GB",sans-serif';
+  var N = window.innerWidth < 640;
+  var charts=[];
+
+  /* —— punch card: 4 hotels × 8 dims —— */
+  var dims=['客房面积','前台与休息区','公共空间','早餐台','配套设施','品牌露出','携程口碑','距离优势'];
+  var hotels=['① 希尔顿欢朋·吴中','② 维也纳·火车站','③ 维也纳·观前','④ 凯里亚德·吴江'];
+  /* score: 3=绿 2=铜 1=红  — rows = hotels top→bottom matching V3 plan dots */
+  var scores=[
+    [3,3,3,3,3,2,3,2],
+    [3,3,3,2,2,3,2,3],
+    [2,3,3,2,2,3,3,3],
+    [3,3,3,2,2,3,3,1]
+  ];
+  var punchData=[];
+  for(var y=0;y<4;y++){
+    for(var x=0;x<8;x++){
+      punchData.push([x, y, scores[y][x]]);
+    }
+  }
+  function scoreColor(s){ return s===3?GREEN:(s===2?COPPER:RED); }
+  function scoreSize(s){ return s===3?(N?22:28):(s===2?(N?16:20):(N?12:14)); }
+
+  var punchEl=document.getElementById('punch');
+  if(punchEl && window.echarts){
+    punchEl.style.height=(N?360:420)+'px';
+    var cp=echarts.init(punchEl);
+    cp.setOption({
+      textStyle:{fontFamily:FONT},
+      grid:{left:N?118:168, right:N?18:28, top:28, bottom:N?78:56},
+      tooltip:{
+        trigger:'item', backgroundColor:'rgba(255,255,255,.97)', borderColor:'#CBD6E5', borderWidth:1, padding:[10,13],
+        textStyle:{color:INK,fontSize:14},
+        formatter:function(p){
+          var s=p.value[2], lab=s===3?'绿 · 充分':(s===2?'铜 · 有保留':'红 · 不足／吃亏');
+          return '<b style="color:#0F3B72">'+hotels[p.value[1]]+'</b><br>'+dims[p.value[0]]+'：'+lab;
+        }
+      },
+      xAxis:{type:'category', data:dims, position:'top',
+        axisLine:{show:false}, axisTick:{show:false},
+        axisLabel:{color:MUTED, fontSize:N?11:13, interval:0, rotate:N?30:0}},
+      yAxis:{type:'category', data:hotels, inverse:true,
+        axisLine:{show:false}, axisTick:{show:false},
+        axisLabel:{color:INK, fontSize:N?12:14}},
+      series:[{
+        type:'scatter',
+        data:punchData,
+        symbolSize:function(v){ return scoreSize(v[2]); },
+        itemStyle:{
+          color:function(p){ return scoreColor(p.value[2]); },
+          opacity:.92, borderColor:'#fff', borderWidth:1.4,
+          shadowBlur:6, shadowColor:'rgba(15,59,114,.12)'
+        }
+      }]
+    });
+    charts.push(cp);
+  }
+
+  /* —— horizontal range bar: king-bed area min–max + distance note —— */
+  /* 纵轴按距平江路由近→远；右侧轴标距离 */
+  var rows=[
+    {n:'③ 维也纳·观前', min:20, max:40, dist:'0.97 km', way:'步行约 12 分钟'},
+    {n:'② 维也纳·火车站', min:37, max:45, dist:'约 3 km', way:'驾车约 10 分钟'},
+    {n:'① 希尔顿欢朋·吴中', min:35, max:45, dist:'5.2 km', way:'驾车约 16 分钟'},
+    {n:'④ 凯里亚德·吴江', min:35, max:38, dist:'约 23 km', way:'驾车约 32 分钟'}
+  ];
+  var rangeEl=document.getElementById('rangebar');
+  if(rangeEl && window.echarts){
+    rangeEl.style.height=(N?300:340)+'px';
+    var cr=echarts.init(rangeEl);
+    cr.setOption({
+      textStyle:{fontFamily:FONT},
+      grid:{left:N?150:190, right:N?72:96, top:28, bottom:40},
+      tooltip:{trigger:'axis', axisPointer:{type:'shadow'}, backgroundColor:'rgba(255,255,255,.97)', borderColor:'#CBD6E5', borderWidth:1, padding:[10,13], textStyle:{color:INK,fontSize:14},
+        formatter:function(ps){var r=rows[ps[0].dataIndex];return '<b style="color:#0F3B72">'+r.n+'</b><br>大床房 '+r.min+'–'+r.max+' ㎡<br>距平江路 '+r.dist+'（'+r.way+'）';}},
+      xAxis:{type:'value', min:0, max:50, interval:10, name:'大床房面积（㎡）', nameLocation:'middle', nameGap:28, nameTextStyle:{color:MUTED,fontSize:13},
+        axisLine:{show:false}, axisTick:{show:false},
+        axisLabel:{color:MUTED,fontSize:13}, splitLine:{lineStyle:{color:LINE,type:'dashed'}}},
+      yAxis:[
+        {type:'category', inverse:true, data:rows.map(function(r){return r.n;}),
+          axisLine:{show:false}, axisTick:{show:false}, axisLabel:{color:INK,fontSize:N?12:14}},
+        {type:'category', inverse:true, data:rows.map(function(r){return r.dist;}), position:'right',
+          axisLine:{show:false}, axisTick:{show:false},
+          axisLabel:{color:NAVY, fontSize:N?12:14, fontWeight:600},
+          name:'距平江路', nameLocation:'end', nameGap:8, nameTextStyle:{color:MUTED,fontSize:12}}
+      ],
+      series:[
+        {type:'bar', stack:'r', silent:true, barWidth:22, itemStyle:{color:'transparent'}, data:rows.map(function(r){return r.min;}), tooltip:{show:false}},
+        {type:'bar', stack:'r', barWidth:22,
+          itemStyle:{borderRadius:[0,3,3,0], color:new echarts.graphic.LinearGradient(0,0,1,0,[{offset:0,color:'#4A87CE'},{offset:1,color:'#0F3B72'}])},
+          label:{show:true, position:'right', distance:8, fontSize:N?11:13, color:NAVY, fontWeight:600,
+            formatter:function(p){var r=rows[p.dataIndex];return r.min+'–'+r.max+'㎡';}},
+          data:rows.map(function(r){return r.max-r.min;})}
+      ]
+    });
+    charts.push(cr);
+  }
+
+  window.addEventListener('resize', function(){ charts.forEach(function(c){ c.resize(); }); });
+
+  /* scroll spy — 6 nav items; h1–h4 each highlight own tab */
+  var links=[].slice.call(document.querySelectorAll('.snav a[data-h]'));
+  var spyIds=['why','h1','h2','h3','h4','xcompare'];
+  var map={};
+  spyIds.forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) map[id]=el;
+  });
+  function navKey(id){ return id; }
+  var current=null;
+  function setOn(id){
+    var key=navKey(id);
+    if(current===key) return;
+    current=key;
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('data-h')===key); });
+  }
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(entries){
+      var visible=entries.filter(function(e){return e.isIntersecting;})
+        .sort(function(a,b){return b.intersectionRatio-a.intersectionRatio;});
+      if(visible[0]) setOn(visible[0].target.id);
+    },{root:null, rootMargin:'-20% 0px -55% 0px', threshold:[0,0.1,0.25,0.5,0.75]});
+    Object.keys(map).forEach(function(id){ io.observe(map[id]); });
+  }
+  function sync(){
+    var y=window.scrollY+ window.innerHeight*0.28, best=null, bestTop=-1e9;
+    Object.keys(map).forEach(function(id){
+      var top=map[id].getBoundingClientRect().top + window.scrollY;
+      if(top<=y && top>bestTop){ bestTop=top; best=id; }
+    });
+    if(best) setOn(best);
+  }
+  window.addEventListener('scroll',sync,{passive:true});
+  sync();
+})();
+</script>
+</body></html>
