@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>苏州拍摄选点 · 整合 V5</title>
+<title>苏州拍摄选点 · 整合 V6</title>
 <style>
 :root{
   --navy:#0F3B72; --blue:#1B5FAE; --blue2:#4A87CE; --ice:#EAF1FA;
@@ -85,6 +85,7 @@ h2 .n{font-family:Georgia,serif;background:var(--navy);color:#fff;font-size:14px
 .pltag{font-size:12.5px;background:var(--ice);color:var(--navy);padding:3px 11px;border-radius:3px;font-weight:600;margin-left:auto;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:4px;border:1px solid #D5E3F5;transition:background .15s,color .15s}
 .pltag:hover{background:var(--navy);color:#fff;text-decoration:none}
 .hero>a{display:block;width:100%;height:100%;cursor:pointer}
+.hero.full>a{height:auto}
 .hero>a:hover img{opacity:.92}
 .kv{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}
 .kv>div{padding:14px 16px;border-right:1px solid var(--line)}
@@ -172,7 +173,9 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
   .dots{grid-template-columns:1fr 1fr}
   .pg.g4,.pg.g3{grid-template-columns:1fr 1fr}
   .hero{aspect-ratio:16/9;max-height:200px}
-  .hero.full{aspect-ratio:auto;max-height:none}
+  .hero.full{aspect-ratio:auto;max-height:none;height:auto}
+  .hero.full img{width:100%;height:auto;object-fit:unset}
+  .hero.full>a{height:auto}
   .fscreen .row{flex-direction:column}
 }
 </style>
@@ -192,7 +195,7 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
 </nav>
 
 <div class="wrap">
-<div class="kicker">《人间老有处趣》 · 苏州站<span class="ver">整合 V5 · 2026-11-07</span></div>
+<div class="kicker">《人间老有处趣》 · 苏州站<span class="ver">整合 V6 · 2026-11-07</span></div>
 <h1>苏州拍摄选点 · 四家整合</h1>
 <p class="sub">最终要选定一家酒店作为拍摄基地，其余三家作备选。四家均属锦江酒店（中国区）可协调门店；筛选时以<strong>拍摄环境与大床房面积</strong>为第一考量。</p>
 <div class="rule"></div>
@@ -329,7 +332,7 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
 
 <!-- ========== H3 ========== -->
 <section class="hotel" id="h3">
-<figure class="hero full"><a href="https://hotels.ctrip.com/hotels/99962181.html" target="_blank" rel="noopener" title="携程 · 房价与房型"><img src="assets/vienna-guanqian/exterior/hero-入口门头-验收.jpg" alt="维也纳国际酒店苏州观前街平江路店外观" loading="lazy"></a></figure>
+<figure class="hero full"><a href="https://hotels.ctrip.com/hotels/99962181.html" target="_blank" rel="noopener" title="携程 · 房价与房型"><img src="assets/vienna-guanqian/exterior/hero-入口门头-v5.jpg" alt="维也纳国际酒店苏州观前街平江路店外观" loading="lazy"></a></figure>
 <div class="plan">
 <div class="plhead"><span class="plno">方案三</span><h3>维也纳国际酒店（苏州观前街平江路店）</h3><a class="pltag" href="https://hotels.ctrip.com/hotels/99962181.html" target="_blank" rel="noopener">携程 · 房价房型 →</a></div>
 <div class="kv">
@@ -479,7 +482,7 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
 <p class="legend">面积取 Trip.com 房型 areaInfo，仅统计大床房。距离：①③ 为携程标注到「平江路历史街区」；② 约 3 km；④ 吴江→平江公开自驾约 23 km／32 分钟。</p>
 </section>
 
-<p class="foot">整合 V5 · 2026-11-07 · 不覆盖 V1／V2／V3／V4 · 中国区口径 · 面积 Trip.com areaInfo · 图片 携程官方／住客评价</p>
+<p class="foot">整合 V6 · 2026-11-07 · 不覆盖 V1／V2／V3／V4／V5 · 中国区口径 · 面积 Trip.com areaInfo · 图片 携程官方／住客评价</p>
 </div>
 
 <script src="assets/js/echarts.min.js"></script>
