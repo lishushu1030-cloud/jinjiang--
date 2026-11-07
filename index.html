@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>苏州拍摄选点 · 整合 V10</title>
+<title>苏州拍摄选点 · 整合 V11</title>
 <style>
 :root{
   --navy:#0F3B72; --blue:#1B5FAE; --blue2:#4A87CE; --ice:#EAF1FA;
@@ -208,7 +208,7 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
 </nav>
 
 <div class="wrap">
-<div class="kicker">《人间老有处趣》 · 苏州站<span class="ver">整合 V10 · 2026-11-07</span></div>
+<div class="kicker">《人间老有处趣》 · 苏州站<span class="ver">整合 V11 · 2026-11-07</span></div>
 <h1>苏州拍摄选点 · 四家整合</h1>
 <p class="sub">最终要选定一家酒店作为拍摄基地，其余三家作备选。四家均属锦江酒店（中国区）可协调门店；筛选时以<strong>拍摄环境与大床房面积</strong>为第一考量。</p>
 <div class="rule"></div>
@@ -495,7 +495,7 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
 <p class="legend">面积取 Trip.com 房型 areaInfo，仅统计大床房。距离：①③ 为携程标注到「平江路历史街区」；② 约 3 km；④ 吴江→平江公开自驾约 23 km／32 分钟。</p>
 </section>
 
-<p class="foot">整合 V10 · 2026-11-07 · 不覆盖 V1／V2／V3／V4／V5／V6／V7／V8／V9 · 中国区口径 · 面积 Trip.com areaInfo · 图片 携程官方／住客评价</p>
+<p class="foot">整合 V11 · 2026-11-07 · 不覆盖 V1／V2／V3／V4／V5／V6／V7／V8／V9 · 中国区口径 · 面积 Trip.com areaInfo · 图片 携程官方／住客评价</p>
 </div>
 
 <script src="assets/js/echarts.min.js"></script>
@@ -505,6 +505,17 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
   var FONT='"PingFang SC","Hiragino Sans GB",sans-serif';
   var N = window.innerWidth < 640;
   var charts=[];
+
+  function tipPos(point, params, dom, rect, size){
+    var box=size.contentSize, view=size.viewSize;
+    var x=point[0]+12, y=point[1]+12;
+    if(x+box[0]>view[0]-8) x=Math.max(8, view[0]-box[0]-8);
+    if(x<8) x=8;
+    if(y+box[1]>view[1]-8) y=Math.max(8, view[1]-box[1]-8);
+    if(y<8) y=8;
+    return [x,y];
+  }
+  var tipBase={appendToBody:true, confine:true, backgroundColor:'rgba(255,255,255,.97)', borderColor:'#CBD6E5', borderWidth:1, padding:[10,13], textStyle:{color:INK,fontSize:N?13:14}, extraCssText:'max-width:min(280px,86vw);white-space:normal;z-index:99999;box-shadow:0 8px 24px rgba(15,59,114,.18);', position:tipPos};
 
   /* —— punch card: 4 hotels × 8 dims —— */
   var dimsFull=['客房面积','前台与休息区','公共空间','早餐台','配套设施','品牌露出','携程口碑','距离优势'];
@@ -536,14 +547,13 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
     cp.setOption({
       textStyle:{fontFamily:FONT},
       grid:{left:N?96:168, right:N?10:28, top:N?42:28, bottom:N?28:56},
-      tooltip:{
-        trigger:'item', backgroundColor:'rgba(255,255,255,.97)', borderColor:'#CBD6E5', borderWidth:1, padding:[10,13],
-        textStyle:{color:INK,fontSize:14},
+      tooltip:Object.assign({}, tipBase, {
+        trigger:'item',
         formatter:function(p){
           var s=p.value[2], lab=s===3?'绿 · 充分':(s===2?'铜 · 有保留':'红 · 不足／吃亏');
           return '<b style="color:#0F3B72">'+hotels[p.value[1]]+'</b><br>'+dimsFull[p.value[0]]+'：'+lab;
         }
-      },
+      }),
       xAxis:{type:'category', data:dims, position:'top',
         axisLine:{show:false}, axisTick:{show:false},
         axisLabel:{color:MUTED, fontSize:N?11:13, interval:0, rotate:0,
@@ -580,8 +590,8 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
     cr.setOption({
       textStyle:{fontFamily:FONT},
       grid:{left:N?118:190, right:N?96:96, top:N?36:28, bottom:N?48:40},
-      tooltip:{trigger:'axis', axisPointer:{type:'shadow'}, backgroundColor:'rgba(255,255,255,.97)', borderColor:'#CBD6E5', borderWidth:1, padding:[10,13], textStyle:{color:INK,fontSize:14},
-        formatter:function(ps){var r=rows[ps[0].dataIndex];return '<b style="color:#0F3B72">'+r.n+'</b><br>大床房 '+r.min+'–'+r.max+' ㎡<br>距平江路 '+r.dist+'（'+r.way+'）';}},
+      tooltip:Object.assign({}, tipBase, {trigger:'axis', axisPointer:{type:'shadow'},
+        formatter:function(ps){var r=rows[ps[0].dataIndex];return '<b style="color:#0F3B72">'+r.n+'</b><br>大床房 '+r.min+'–'+r.max+' ㎡<br>距平江路 '+r.dist+'（'+r.way+'）';}}),
       xAxis:{type:'value', min:0, max:50, interval:10, name:N?'㎡':'大床房面积（㎡）', nameLocation:'middle', nameGap:N?24:28, nameTextStyle:{color:MUTED,fontSize:N?12:13},
         axisLine:{show:false}, axisTick:{show:false},
         axisLabel:{color:MUTED,fontSize:N?11:13}, splitLine:{lineStyle:{color:LINE,type:'dashed'}}},
