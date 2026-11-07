@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>苏州拍摄选点 · 整合 V9</title>
+<title>苏州拍摄选点 · 整合 V10</title>
 <style>
 :root{
   --navy:#0F3B72; --blue:#1B5FAE; --blue2:#4A87CE; --ice:#EAF1FA;
@@ -179,6 +179,13 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
   .dots{grid-template-columns:1fr 1fr}
   .pg.g4,.pg.g3{grid-template-columns:1fr 1fr}
   .hero{aspect-ratio:16/9;max-height:200px}
+  .hero>a{height:100%}
+  .hero img{width:100%;height:100%;object-fit:cover}
+  /* 观前：手机与其他店同一套 16/9 cover；桌面仍用验收条图自然高 */
+  .hero.gq{aspect-ratio:16/9;max-height:200px;height:auto}
+  .hero.gq>a{height:100%}
+  .hero.gq picture{display:block;width:100%;height:100%;line-height:0}
+  .hero.gq img{width:100%;height:100%;object-fit:cover;object-position:center 70%}
   .hero.full{aspect-ratio:auto;max-height:none;height:auto}
   .hero.full img{width:100%;height:auto;object-fit:unset}
   .hero.full>a{height:auto}
@@ -201,7 +208,7 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
 </nav>
 
 <div class="wrap">
-<div class="kicker">《人间老有处趣》 · 苏州站<span class="ver">整合 V9 · 2026-11-07</span></div>
+<div class="kicker">《人间老有处趣》 · 苏州站<span class="ver">整合 V10 · 2026-11-07</span></div>
 <h1>苏州拍摄选点 · 四家整合</h1>
 <p class="sub">最终要选定一家酒店作为拍摄基地，其余三家作备选。四家均属锦江酒店（中国区）可协调门店；筛选时以<strong>拍摄环境与大床房面积</strong>为第一考量。</p>
 <div class="rule"></div>
@@ -488,7 +495,7 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
 <p class="legend">面积取 Trip.com 房型 areaInfo，仅统计大床房。距离：①③ 为携程标注到「平江路历史街区」；② 约 3 km；④ 吴江→平江公开自驾约 23 km／32 分钟。</p>
 </section>
 
-<p class="foot">整合 V9 · 2026-11-07 · 不覆盖 V1／V2／V3／V4／V5／V6／V7／V8 · 中国区口径 · 面积 Trip.com areaInfo · 图片 携程官方／住客评价</p>
+<p class="foot">整合 V10 · 2026-11-07 · 不覆盖 V1／V2／V3／V4／V5／V6／V7／V8／V9 · 中国区口径 · 面积 Trip.com areaInfo · 图片 携程官方／住客评价</p>
 </div>
 
 <script src="assets/js/echarts.min.js"></script>
@@ -500,8 +507,12 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
   var charts=[];
 
   /* —— punch card: 4 hotels × 8 dims —— */
-  var dims=['客房面积','前台与休息区','公共空间','早餐台','配套设施','品牌露出','携程口碑','距离优势'];
-  var hotels=['① 希尔顿欢朋·吴中','② 维也纳·火车站','③ 维也纳·观前','④ 凯里亚德·吴江'];
+  var dimsFull=['客房面积','前台与休息区','公共空间','早餐台','配套设施','品牌露出','携程口碑','距离优势'];
+  var dimsShort=['面积','前台','公区','早餐','配套','品牌','口碑','距离'];
+  var dims=N?dimsShort:dimsFull;
+  var hotelsFull=['① 希尔顿欢朋·吴中','② 维也纳·火车站','③ 维也纳·观前','④ 凯里亚德·吴江'];
+  var hotelsShort=['① 欢朋·吴中','② 维也纳·火车站','③ 维也纳·观前','④ 凯里亚德·吴江'];
+  var hotels=N?hotelsShort:hotelsFull;
   /* score: 3=绿 2=铜 1=红  — rows = hotels top→bottom matching V3 plan dots */
   var scores=[
     [3,3,3,3,3,2,3,2],
@@ -520,25 +531,26 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
 
   var punchEl=document.getElementById('punch');
   if(punchEl && window.echarts){
-    punchEl.style.height=(N?360:420)+'px';
+    punchEl.style.height=(N?380:420)+'px';
     var cp=echarts.init(punchEl);
     cp.setOption({
       textStyle:{fontFamily:FONT},
-      grid:{left:N?118:168, right:N?18:28, top:28, bottom:N?78:56},
+      grid:{left:N?96:168, right:N?10:28, top:N?42:28, bottom:N?28:56},
       tooltip:{
         trigger:'item', backgroundColor:'rgba(255,255,255,.97)', borderColor:'#CBD6E5', borderWidth:1, padding:[10,13],
         textStyle:{color:INK,fontSize:14},
         formatter:function(p){
           var s=p.value[2], lab=s===3?'绿 · 充分':(s===2?'铜 · 有保留':'红 · 不足／吃亏');
-          return '<b style="color:#0F3B72">'+hotels[p.value[1]]+'</b><br>'+dims[p.value[0]]+'：'+lab;
+          return '<b style="color:#0F3B72">'+hotels[p.value[1]]+'</b><br>'+dimsFull[p.value[0]]+'：'+lab;
         }
       },
       xAxis:{type:'category', data:dims, position:'top',
         axisLine:{show:false}, axisTick:{show:false},
-        axisLabel:{color:MUTED, fontSize:N?11:13, interval:0, rotate:N?30:0}},
+        axisLabel:{color:MUTED, fontSize:N?11:13, interval:0, rotate:0,
+          margin:N?8:8, width:N?28:null, overflow:'none'}},
       yAxis:{type:'category', data:hotels, inverse:true,
         axisLine:{show:false}, axisTick:{show:false},
-        axisLabel:{color:INK, fontSize:N?12:14}},
+        axisLabel:{color:INK, fontSize:N?11:14, width:N?84:140, overflow:'truncate'}},
       series:[{
         type:'scatter',
         data:punchData,
@@ -563,37 +575,40 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
   ];
   var rangeEl=document.getElementById('rangebar');
   if(rangeEl && window.echarts){
-    rangeEl.style.height=(N?300:340)+'px';
+    rangeEl.style.height=(N?320:340)+'px';
     var cr=echarts.init(rangeEl);
     cr.setOption({
       textStyle:{fontFamily:FONT},
-      grid:{left:N?150:190, right:N?72:96, top:28, bottom:40},
+      grid:{left:N?118:190, right:N?96:96, top:N?36:28, bottom:N?48:40},
       tooltip:{trigger:'axis', axisPointer:{type:'shadow'}, backgroundColor:'rgba(255,255,255,.97)', borderColor:'#CBD6E5', borderWidth:1, padding:[10,13], textStyle:{color:INK,fontSize:14},
         formatter:function(ps){var r=rows[ps[0].dataIndex];return '<b style="color:#0F3B72">'+r.n+'</b><br>大床房 '+r.min+'–'+r.max+' ㎡<br>距平江路 '+r.dist+'（'+r.way+'）';}},
-      xAxis:{type:'value', min:0, max:50, interval:10, name:'大床房面积（㎡）', nameLocation:'middle', nameGap:28, nameTextStyle:{color:MUTED,fontSize:13},
+      xAxis:{type:'value', min:0, max:50, interval:10, name:N?'㎡':'大床房面积（㎡）', nameLocation:'middle', nameGap:N?24:28, nameTextStyle:{color:MUTED,fontSize:N?12:13},
         axisLine:{show:false}, axisTick:{show:false},
-        axisLabel:{color:MUTED,fontSize:13}, splitLine:{lineStyle:{color:LINE,type:'dashed'}}},
+        axisLabel:{color:MUTED,fontSize:N?11:13}, splitLine:{lineStyle:{color:LINE,type:'dashed'}}},
       yAxis:[
         {type:'category', inverse:true, data:rows.map(function(r){return r.n;}),
-          axisLine:{show:false}, axisTick:{show:false}, axisLabel:{color:INK,fontSize:N?12:14}},
-        {type:'category', inverse:true, data:rows.map(function(r){return r.dist;}), position:'right',
           axisLine:{show:false}, axisTick:{show:false},
-          axisLabel:{color:NAVY, fontSize:N?12:14, fontWeight:600},
-          name:'距平江路', nameLocation:'end', nameGap:8, nameTextStyle:{color:MUTED,fontSize:12}}
+          axisLabel:{color:INK,fontSize:N?11:14, width:N?100:160, overflow:'truncate'}},
+        {type:'category', inverse:true, data:rows.map(function(r){return N?'':r.dist;}), position:'right',
+          axisLine:{show:false}, axisTick:{show:false},
+          axisLabel:{show:!N, color:NAVY, fontSize:14, fontWeight:600},
+          name:N?'':'距平江路', nameLocation:'end', nameGap:8, nameTextStyle:{color:MUTED,fontSize:12}}
       ],
       series:[
-        {type:'bar', stack:'r', silent:true, barWidth:22, itemStyle:{color:'transparent'}, data:rows.map(function(r){return r.min;}), tooltip:{show:false}},
-        {type:'bar', stack:'r', barWidth:22,
+        {type:'bar', stack:'r', silent:true, barWidth:N?18:22, itemStyle:{color:'transparent'}, data:rows.map(function(r){return r.min;}), tooltip:{show:false}},
+        {type:'bar', stack:'r', barWidth:N?18:22,
           itemStyle:{borderRadius:[0,3,3,0], color:new echarts.graphic.LinearGradient(0,0,1,0,[{offset:0,color:'#4A87CE'},{offset:1,color:'#0F3B72'}])},
-          label:{show:true, position:'right', distance:8, fontSize:N?11:13, color:NAVY, fontWeight:600,
-            formatter:function(p){var r=rows[p.dataIndex];return r.min+'–'+r.max+'㎡';}},
+          label:{show:true, position:'right', distance:N?3:8, fontSize:N?10:13, color:NAVY, fontWeight:600, lineHeight:N?13:18,
+            formatter:function(p){var r=rows[p.dataIndex];return N?(r.min+'–'+r.max+'㎡\n'+r.dist):(r.min+'–'+r.max+'㎡');}},
           data:rows.map(function(r){return r.max-r.min;})}
       ]
     });
     charts.push(cr);
   }
 
-  window.addEventListener('resize', function(){ charts.forEach(function(c){ c.resize(); }); });
+  function resizeCharts(){ charts.forEach(function(c){ c.resize(); }); }
+  window.addEventListener('resize', resizeCharts);
+  window.addEventListener('orientationchange', function(){ setTimeout(resizeCharts, 220); });
 
   /* scroll spy — 6 nav items; h1–h4 each highlight own tab */
   var links=[].slice.call(document.querySelectorAll('.snav a[data-h]'));
