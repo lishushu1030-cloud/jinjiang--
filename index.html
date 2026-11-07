@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>苏州拍摄选点 · 整合 V11</title>
+<title>苏州拍摄选点 · 整合 V12</title>
 <style>
 :root{
   --navy:#0F3B72; --blue:#1B5FAE; --blue2:#4A87CE; --ice:#EAF1FA;
@@ -208,7 +208,7 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
 </nav>
 
 <div class="wrap">
-<div class="kicker">《人间老有处趣》 · 苏州站<span class="ver">整合 V11 · 2026-11-07</span></div>
+<div class="kicker">《人间老有处趣》 · 苏州站<span class="ver">整合 V12 · 2026-11-07</span></div>
 <h1>苏州拍摄选点 · 四家整合</h1>
 <p class="sub">最终要选定一家酒店作为拍摄基地，其余三家作备选。四家均属锦江酒店（中国区）可协调门店；筛选时以<strong>拍摄环境与大床房面积</strong>为第一考量。</p>
 <div class="rule"></div>
@@ -495,7 +495,7 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
 <p class="legend">面积取 Trip.com 房型 areaInfo，仅统计大床房。距离：①③ 为携程标注到「平江路历史街区」；② 约 3 km；④ 吴江→平江公开自驾约 23 km／32 分钟。</p>
 </section>
 
-<p class="foot">整合 V11 · 2026-11-07 · 不覆盖 V1／V2／V3／V4／V5／V6／V7／V8／V9 · 中国区口径 · 面积 Trip.com areaInfo · 图片 携程官方／住客评价</p>
+<p class="foot">整合 V12 · 2026-11-07 · 不覆盖 V1／V2／V3／V4／V5／V6／V7／V8／V9 · 中国区口径 · 面积 Trip.com areaInfo · 图片 携程官方／住客评价</p>
 </div>
 
 <script src="assets/js/echarts.min.js"></script>
@@ -506,16 +506,25 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
   var N = window.innerWidth < 640;
   var charts=[];
 
+  /* Horizontal center, clamped the same way confine clamps, so the box does not
+     follow the pointer or tug against confine. transitionDuration 0 stops the slide. */
   function tipPos(point, params, dom, rect, size){
     var box=size.contentSize, view=size.viewSize;
-    var x=point[0]+12, y=point[1]+12;
-    if(x+box[0]>view[0]-8) x=Math.max(8, view[0]-box[0]-8);
-    if(x<8) x=8;
-    if(y+box[1]>view[1]-8) y=Math.max(8, view[1]-box[1]-8);
-    if(y<8) y=8;
-    return [x,y];
+    var x=Math.round((view[0]-box[0])/2);
+    var y=Math.round(point[1]+12);
+    if(y+box[1]>view[1]) y=Math.round(point[1]-box[1]-8);
+    x=Math.max(0, Math.min(x, view[0]-box[0]));
+    y=Math.max(0, Math.min(y, view[1]-box[1]));
+    return [x, y];
   }
-  var tipBase={appendToBody:true, confine:true, backgroundColor:'rgba(255,255,255,.97)', borderColor:'#CBD6E5', borderWidth:1, padding:[10,13], textStyle:{color:INK,fontSize:N?13:14}, extraCssText:'max-width:min(280px,86vw);white-space:normal;z-index:99999;box-shadow:0 8px 24px rgba(15,59,114,.18);', position:tipPos};
+  var tipBase={
+    appendToBody:true, confine:true, position:tipPos,
+    showDelay:0, hideDelay:0, transitionDuration:0,
+    triggerOn:'mousemove|click',
+    backgroundColor:'rgba(255,255,255,.97)', borderColor:'#CBD6E5', borderWidth:1,
+    padding:[10,13], textStyle:{color:INK,fontSize:N?13:14},
+    extraCssText:'max-width:min(280px,86vw);white-space:normal;z-index:99999;box-shadow:0 8px 24px rgba(15,59,114,.18);transition:none!important;'
+  };
 
   /* —— punch card: 4 hotels × 8 dims —— */
   var dimsFull=['客房面积','前台与休息区','公共空间','早餐台','配套设施','品牌露出','携程口碑','距离优势'];
@@ -589,10 +598,10 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
     var cr=echarts.init(rangeEl);
     cr.setOption({
       textStyle:{fontFamily:FONT},
-      grid:{left:N?118:190, right:N?96:96, top:N?36:28, bottom:N?48:40},
-      tooltip:Object.assign({}, tipBase, {trigger:'axis', axisPointer:{type:'shadow'},
+      grid:{left:N?118:190, right:N?118:96, top:N?36:28, bottom:N?58:40},
+      tooltip:Object.assign({}, tipBase, {trigger:'axis', axisPointer:{type:'shadow', animation:false, animationDurationUpdate:0},
         formatter:function(ps){var r=rows[ps[0].dataIndex];return '<b style="color:#0F3B72">'+r.n+'</b><br>大床房 '+r.min+'–'+r.max+' ㎡<br>距平江路 '+r.dist+'（'+r.way+'）';}}),
-      xAxis:{type:'value', min:0, max:50, interval:10, name:N?'㎡':'大床房面积（㎡）', nameLocation:'middle', nameGap:N?24:28, nameTextStyle:{color:MUTED,fontSize:N?12:13},
+      xAxis:{type:'value', min:0, max:50, interval:10, name:N?'面积（㎡）':'大床房面积（㎡）', nameLocation:'middle', nameGap:N?26:28, nameTextStyle:{color:MUTED,fontSize:N?11:13},
         axisLine:{show:false}, axisTick:{show:false},
         axisLabel:{color:MUTED,fontSize:N?11:13}, splitLine:{lineStyle:{color:LINE,type:'dashed'}}},
       yAxis:[
@@ -608,8 +617,16 @@ thead th:first-child,tbody th{position:sticky;left:0;z-index:2}
         {type:'bar', stack:'r', silent:true, barWidth:N?18:22, itemStyle:{color:'transparent'}, data:rows.map(function(r){return r.min;}), tooltip:{show:false}},
         {type:'bar', stack:'r', barWidth:N?18:22,
           itemStyle:{borderRadius:[0,3,3,0], color:new echarts.graphic.LinearGradient(0,0,1,0,[{offset:0,color:'#4A87CE'},{offset:1,color:'#0F3B72'}])},
-          label:{show:true, position:'right', distance:N?3:8, fontSize:N?10:13, color:NAVY, fontWeight:600, lineHeight:N?13:18,
-            formatter:function(p){var r=rows[p.dataIndex];return N?(r.min+'–'+r.max+'㎡\n'+r.dist):(r.min+'–'+r.max+'㎡');}},
+          label:{show:true, position:'right', distance:N?4:8, overflow:'none', fontSize:N?10:13, color:NAVY, fontWeight:600, lineHeight:N?14:18,
+            formatter:function(p){
+              var r=rows[p.dataIndex];
+              var area=r.min+'–'+r.max+'\u2060㎡';
+              return N?('{a|'+area+'}\n{b|'+r.dist+'}'):('{a|'+area+'}');
+            },
+            rich:{
+              a:{fontSize:N?10:13, fontWeight:600, color:NAVY, lineHeight:N?13:18, align:'left'},
+              b:{fontSize:N?10:13, fontWeight:600, color:NAVY, lineHeight:N?13:18, align:'left'}
+            }},
           data:rows.map(function(r){return r.max-r.min;})}
       ]
     });
